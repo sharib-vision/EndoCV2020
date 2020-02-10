@@ -6,7 +6,7 @@ Endoscopy is a widely used clinical procedure for the early detection of numerou
 
 In the framework of **Endoscopy Computer Vision Challenges on Segmentation and Detection (EndoCV2020)** we propose to organise two sub-challenges:
 
-Sub-challenge I:  [Endoscopy Artefact Detection and Segmentation (EAD2020)](https://ead2020.grand-challenge.org)
+Sub-challenge I:  **[Endoscopy Artefact Detection and Segmentation (EAD2020)](https://ead2020.grand-challenge.org)**
 
 Sub-challenge II: **[Endoscopy Disease Detection and Segmentation (EDD2020)](https://edd2020.grand-challenge.org)**
 
