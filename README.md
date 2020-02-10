@@ -12,7 +12,7 @@ Sub-challenge II: **[Endoscopy Disease Detection and Segmentation (EDD2020)](htt
 
 #### What you can find here?
 
-- Set-up docker container
+- [Set-up docker container](https://github.com/sharibox/tutorial/blob/master/docker_essentials.md)
 
 - Getting started with testing your methods on ``test data``. This time we release as docker container
 
