@@ -96,6 +96,9 @@ my_dictionary = {
             },
             "ap_dict":{
               "value":       (ap_dictionary_25)
+            },
+            "mAP_std":{
+             "value":   (np.std(map_concat)*100)
             }
         }
 }
