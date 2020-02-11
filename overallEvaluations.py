@@ -45,7 +45,7 @@ if __name__ == '__main__':
     PPV=0
     Recall = 0
     scoreSemantic=0
-    
+    mAP_d_std=0
     score_g = 0
     debug = 1
     semScore_mean_dev=0
@@ -78,6 +78,8 @@ if __name__ == '__main__':
             mAP_d_25 = valAppend[2]['value']*0.01
             mAP_d_50 = valAppend[4]['value']*0.01
             mAP_d_75 = valAppend[6]['value']*0.01
+            
+            mAP_d_std = valAppend[9]['value']
         
     """ case: Semantic """
     if valArgs.caseType == 1 or valArgs.caseType == 3 or valArgs.caseType == 5:
@@ -179,6 +181,9 @@ if __name__ == '__main__':
                 },
                 "dev_g":{
                   "value": (score_g)
+                },
+                "mAP_d_std":{
+                  "value": (mAP_d_std)
                 }
             }
     }   
