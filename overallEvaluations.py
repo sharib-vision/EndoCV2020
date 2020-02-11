@@ -79,7 +79,7 @@ if __name__ == '__main__':
             mAP_d_50 = valAppend[4]['value']*0.01
             mAP_d_75 = valAppend[6]['value']*0.01
             
-            mAP_d_std = valAppend[9]['value']
+            mAP_d_std = valAppend[9]['value']*0.01
         
     """ case: Semantic """
     if valArgs.caseType == 1 or valArgs.caseType == 3 or valArgs.caseType == 5:
