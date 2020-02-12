@@ -65,6 +65,11 @@ do
        echo "generalization detected"
        python $BASE_DIR/EndoCV2020/compute_mAP_IoU.py  $MYDIR/generalization_bbox $BASE_DIR/groundTruths_EAD2020/generalization_bbox $RESULT_FOLDER  metrics_gen_EAD2020.json 'Gen'
    fi
+      # Sequence dat
+   if [ "$DIR" == "sequence_bbox" ]; then
+       echo "sequence data detected"
+       python $BASE_DIR/EndoCV2020/compute_mAP_IoU.py  $MYDIR/sequence_bbox $BASE_DIR/groundTruths_EAD2020/sequence_bbox $RESULT_FOLDER  metrics_seq_EAD2020.json 'Seq'
+   fi
 done
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -82,7 +87,7 @@ RESULT_FOLDER_FINAL='/output'
 for DIR in $RESULT_FOLDER
 do
 # all
-    if [ $numfiles == 3 ]; then
+    if [ $numfiles == 4 ]; then
         # first find the generalization score (as deviation from detection score is required!)
          python $BASE_DIR/EndoCV2020/compute_score_g.py \
             --detectionMetric $RESULT_FOLDER/metrics_det_EAD2020.json \
@@ -93,32 +98,38 @@ do
         python $BASE_DIR/EndoCV2020/overallEvaluations.py \
             --detectionMetric $RESULT_FOLDER/metrics_det_EAD2020.json \
             --generalizationMetric $RESULT_FOLDER/metric_gen_score.json\
+            --sequenceMetric $RESULT_FOLDER/metric_seq_score.json\
             --semanticMetric  $RESULT_FOLDER/metrics_sem.json \
-            --caseType 3\
+            --caseType 4\
             --Result_dir  ${RESULT_FOLDER_FINAL}\
             --jsonFileName metrics.json
             
-    elif [ $numfiles == 4 ]; then
+    elif [ $numfiles == 3 ]; then
+        # only detection/gen/seq
+        python $BASE_DIR/EndoCV2020/compute_score_g.py \
+            --detectionMetric $RESULT_FOLDER/metrics_det_EAD2020.json \
+            --generalizationMetric $RESULT_FOLDER/metrics_gen_EAD2020.json\
+            --Result_dir $RESULT_FOLDER \
+            --jsonFileName metric_gen_score.json
     
         python $BASE_DIR/EndoCV2020/overallEvaluations.py \
             --detectionMetric $RESULT_FOLDER/metrics_det_EAD2020.json \
             --generalizationMetric $RESULT_FOLDER/metric_gen_score.json\
-            --semanticMetric  $RESULT_FOLDER/metrics_sem.json \
+            --sequenceMetric $RESULT_FOLDER/metric_seq_score.json\
             --caseType 3\
             --Result_dir  ${RESULT_FOLDER_FINAL}\
             --jsonFileName metrics.json
-
 # it can be either both semantic and detection
     elif [ $numfiles == 2 ]; then
         for jsonFile in `ls $RESULT_FOLDER/ |grep '.json'`;do
             IFS='_' read -r -a array <<< "$jsonFile"
         done
 
-        if [ "${array[1]}" == 'sem.json' ]; then
+        if [ "${array[1]}" == 'sem' ]; then
             python $BASE_DIR/EndoCV2020/overallEvaluations.py \
             --detectionMetric $RESULT_FOLDER/metrics_det_EAD2020.json \
             --semanticMetric  $RESULT_FOLDER/metrics_sem.json \
-            --caseType 5\
+            --caseType 2\
             --Result_dir  ${RESULT_FOLDER_FINAL} \
             --jsonFileName metrics.json
 
@@ -143,7 +154,7 @@ do
             IFS='_' read -r -a array <<< "$jsonFile"
             echo ${array[1]}
         done
-        if [ "${array[1]}" == 'sem.json' ]; then
+        if [ "${array[1]}" == 'sem' ]; then
             python $BASE_DIR/EndoCV2020/overallEvaluations.py \
             --semanticMetric  $RESULT_FOLDER/metrics_sem.json \
             --caseType 1\
@@ -154,7 +165,7 @@ do
             echo "detected file is"${jsonFile[1]}
             python $BASE_DIR/EndoCV2020/overallEvaluations.py \
             --detectionMetric $RESULT_FOLDER/metrics_det_EAD2020.json\
-            --caseType 0\
+            --caseType 44\
             --Result_dir  $RESULT_FOLDER_FINAL\
             --jsonFileName metrics.json
         else
