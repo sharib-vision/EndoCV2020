@@ -14,7 +14,7 @@ def get_args():
     parser = argparse.ArgumentParser(description="For EAD2019 challenge: semantic segmentation", formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("--detectionMetric", type=str, default="../Result_test/metrics_det_EAD2020.json", help="json file for detection")
     parser.add_argument("--generalizationMetric", type=str, default="../Result_test/metric_gen_score.json", help="json file for generalization")
-#    parser.add_argument("--semantic_detection", type=str, default="mAP-IOU_EAD2019_results/metrics_detection.json", help="son file for segmentation")
+    parser.add_argument("--sequenceMetric", type=str, default="../Result_test/metric_seq_score.json", help="son file for segmentation")
     parser.add_argument("--semanticMetric", type=str, default="../Result_test/metrics_sem.json", help="son file for segmentation")
     parser.add_argument("--caseType", type=int, default=3, help="please set 0: only for dection both balanced, 1: only for instance segmentation only, 2: for generalization, 3: for all tasks")
     parser.add_argument("--Result_dir", type=str, default="finalEvaluationScores", help="all evaluation scores used for grading")
@@ -32,6 +32,8 @@ if __name__ == '__main__':
     
     valArgs = get_args()
     mAP_d = 0
+    mAP_sq=0
+    IOU_sq=0
     mAP_d_25=0
     mAP_d_50=0
     mAP_d_75=0
@@ -49,11 +51,13 @@ if __name__ == '__main__':
     score_g = 0
     debug = 1
     semScore_mean_dev=0
+    ap_per_class_sq=0
+    ap_per_class = 0
     
     print("detected case type", )
     
-    """ case: Detection """
-    if valArgs.caseType == 0 or valArgs.caseType == 3 or valArgs.caseType == 2 or valArgs.caseType == 4 or valArgs.caseType == 5:
+    """ case: Detection (frame only) """
+    if valArgs.caseType == 0 or valArgs.caseType == 2 or valArgs.caseType == 3 or valArgs.caseType == 2 or valArgs.caseType == 4 or valArgs.caseType == 5 or valArgs.caseType == 44:
         exists = os.path.isfile(valArgs.detectionMetric)
         if exists:
             data = read_json(valArgs.detectionMetric)
@@ -78,11 +82,35 @@ if __name__ == '__main__':
             mAP_d_25 = valAppend[2]['value']*0.01
             mAP_d_50 = valAppend[4]['value']*0.01
             mAP_d_75 = valAppend[6]['value']*0.01
+            ap_per_class = valAppend[8]['value']
+            mAP_d_std = valAppend[9]['value']*0.01
             
-            mAP_d_std = valAppend[9]['value']
+    """ case: Detection (sequencec only) """
+    if valArgs.caseType == 3 or valArgs.caseType == 4 or valArgs.caseType == 5 :
+        exists = os.path.isfile(valArgs.sequenceMetric)
+        if exists:
+            data = read_json(valArgs.sequenceMetric)
+            valAppend = []
+            for p in data["EndoCV2020"].values():
+                valAppend.append(p)
+            scoreDetection = valAppend[2]['value']*0.01
+            if debug:
+                print('final score is computed for detection for sequence data, (task-I, EndoCV2020 challenge)')
+                print('your score is:', valAppend[2]['value']*0.01)
+                
+                print('~~~~~~~~~~~~~~~Complimentary informations~~~~~~~~~~~~~~~')
+                print('mean mAPseq:', valAppend[0]['value']*0.01)
+                print('mean IOUseq:', valAppend[1]['value']*0.01)
+                print('~~~~~~~~~~~~~~~~~~~~~~~~E.O.F~~~~~~~~~~~~~~~~~~~~~~~~~~')
+                print('All scores are saved in json files, see dir:', valArgs.Result_dir)
+        
+            mAP_sq = valAppend[0]['value']*0.01
+            IOU_sq = valAppend[1]['value']*0.01
+            ap_per_class_sq = valAppend[8]['value']
+
         
     """ case: Semantic """
-    if valArgs.caseType == 1 or valArgs.caseType == 3 or valArgs.caseType == 5:
+    if valArgs.caseType == 1 or valArgs.caseType == 4 or valArgs.caseType == 5 or valArgs.caseType == 2 :
         exists = os.path.isfile(valArgs.semanticMetric)
         if exists:
             data = read_json(valArgs.semanticMetric)
@@ -117,7 +145,7 @@ if __name__ == '__main__':
                 ratioPass = 0
                 
             """ case: Generalization """
-    if  valArgs.caseType == 3 or valArgs.caseType == 4:
+    if  valArgs.caseType == 3 or valArgs.caseType == 4 or valArgs.caseType == 5 or valArgs.caseType == 0:
         exists = os.path.isfile(valArgs.generalizationMetric)
         if exists:
             data = read_json(valArgs.generalizationMetric)
@@ -184,6 +212,19 @@ if __name__ == '__main__':
                 },
                 "mAP_d_std":{
                   "value": (mAP_d_std)
+                }
+                ,
+                "ap_per_class":{
+                  "value": (ap_per_class)
+                },
+                "mAP_sq":{
+                  "value": (mAP_sq)
+                },
+                "IOU_sq":{
+                  "value": (IOU_sq)
+                },
+                "ap_per_class_sq":{
+                  "value": (ap_per_class_sq)
                 }
             }
     }   
