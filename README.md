@@ -18,4 +18,3 @@ Sub-challenge II: **[Endoscopy Disease Detection and Segmentation (EDD2020)](htt
 
 - [Upload test on leaderboard](https://github.com/sharibox/EndoCV2020/wiki) 
 
-- Misc. help for getting your scores on the leaderboard
