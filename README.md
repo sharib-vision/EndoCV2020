@@ -16,6 +16,9 @@ Sub-challenge II: **[Endoscopy Disease Detection and Segmentation (EDD2020)](htt
 
 - Getting started with testing your methods on ``test data``. This time we release as docker container
 
-- Upload test on leaderboard 
+- [Upload test on leaderboard](https://github.com/sharibox/EndoCV2020/wiki) 
 
-- Misc. help for getting your scores on the leaderboard
+- Evaluation Detection
+
+- Evaluation Semantic Segmentation
+
